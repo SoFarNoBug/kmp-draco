@@ -1,0 +1,11 @@
+.gradle/
+build/
+**/build/
+target/
+**/target/
+.idea/
+*.iml
+local.properties
+.DS_Store
+**/.DS_Store
+# jniLibs .so：由 build-android.sh 产出；可入库便于 includeBuild（对齐 kmp-wgpu）

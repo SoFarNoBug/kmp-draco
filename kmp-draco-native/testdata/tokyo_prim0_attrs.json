@@ -1,0 +1,12 @@
+{
+  "bufferView": 4,
+  "attributes": {
+    "JOINTS_0": 0,
+    "NORMAL": 1,
+    "POSITION": 2,
+    "TANGENT": 3,
+    "TEXCOORD_0": 4,
+    "TEXCOORD_1": 5,
+    "WEIGHTS_0": 6
+  }
+}
