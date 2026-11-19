@@ -2,7 +2,25 @@
 
 ## Unreleased
 
-（空）
+### 0.1.1 — 2026-11-19（M1 三端 decode）
+
+- [ADD] iOS：`build-ios.sh` → `KmpDracoNative.xcframework`（device+sim arm64）+ `iosMain` cinterop
+- [ADD] Ohos：`build-ohos.sh` → `dist/ohos/arm64-v8a/libkmp_draco_native.so` + `ohosInclude` / `ohosArm64Main`
+- [ADD] H5：`build-wasm.sh` → `dist/wasm`（js + wasm + glue）+ `jsMain` → `window.__kmpDraco`
+- [ADD] 共享 C ABI：`include/kmp_draco_native.h` + `c_api.rs`（Android 仍走 JNI）
+- [ADD] ADR 0002
+- 本波 **不上架** Pod / ohpm / npm
+
+### 分发渠道（更新）
+
+| 渠道 | 状态 |
+|---|---|
+| mavenLocal `kmp-draco` | 可用（Kotlin 脸；native 另链） |
+| Maven Central | 未发 |
+| iOS xcframework（仓内 `dist/ios`） | **本地可用** |
+| Ohos `.so`（仓内 `dist/ohos`） | **本地可用** |
+| H5 wasm（仓内 `dist/wasm`） | **本地可用**（Node smoke tokyo OK） |
+| CocoaPods / ohpm / npm 上架 | **未做** |
 
 ## 0.1.0 — 2026-11-18
 

@@ -13,30 +13,32 @@ Kotlin Multiplatform 的 **Draco bitstream** 解码原语：业务侧同一套 K
 | | |
 |---|---|
 | Maven | `io.github.sofarnobug:kmp-draco:0.1.0`（**mavenLocal 可用**；Central 另单） |
-| Native | Android `arm64-v8a` `libkmp_draco_native.so`（~621 KiB release） |
+| Native | Android `.so` · iOS xcframework · Ohos `.so` · H5 wasm（**本地 dist/**；三渠上架另单） |
 | 语言 | Kotlin Multiplatform 脸 + Rust / `draco-core` |
 | License | Apache-2.0（对齐 `draco-core`） |
 
-> **路人读本页。** 完整接入 / API 全表 → [docs/guide.md](docs/guide.md)。构建 / 发版 → [CONTRIBUTING.md](CONTRIBUTING.md) · [CHANGELOG](CHANGELOG.md)。身份 SoT → [CONTEXT.md](CONTEXT.md) · [ADR 0001](docs/adr/0001-independent-rust-bitstream-android.md)。
+> **路人读本页。** 完整接入 / API 全表 → [docs/guide.md](docs/guide.md)。构建 / 发版 → [CONTRIBUTING.md](CONTRIBUTING.md) · [CHANGELOG](CHANGELOG.md)。身份 SoT → [CONTEXT.md](CONTEXT.md) · [ADR 0001](docs/adr/0001-independent-rust-bitstream-android.md) · [ADR 0002](docs/adr/0002-ios-ohos-wasm-decode.md)。
 
 ---
 
 ## 为什么是独立仓？
 
-Draco 是**压缩几何格式**，不是 GPU 原语。把它塞进 `kmp-wgpu` 或 Holm core 会污染边界（GL 轨也要解、wgpu 不懂 bitstream）。形态对齐 [`kmp-wgpu`](../kmp-wgpu)：独立仓 + Kotlin 脸 + Rust 内核。
+Draco 是**压缩几何格式**，不是 GPU 原语。把它塞进 `kmp-wgpu` 或 Holm core 会污染边界。形态对齐 [`kmp-wgpu`](../kmp-wgpu)：独立仓 + Kotlin 脸 + Rust 内核。
 
-Holm 侧消费约定见 [KuiklyHolm ADR 0017](../KuiklyHolm/docs/adr/0017-kmp-draco-under-holm-gltf.md)（`holm-gltf` **硬依赖**本库，fail-loud）。
+Holm 侧消费约定见 [KuiklyHolm ADR 0017](../KuiklyHolm/docs/adr/0017-kmp-draco-under-holm-gltf.md)。
 
 ```text
 你的 KMP / App / holm-gltf
     │  Kotlin API（com.jlj.kmp.draco）
     ▼
 kmp-draco
-    │  JNI（M0：Android）
+    │  Android JNI · iOS/Ohos C ABI · H5 wasm-bindgen
     ▼
 kmp_draco_native（Rust + draco-core decoder）
-    │
-    └─ Android ──► libkmp_draco_native.so（arm64-v8a）
+    ├─ Android ──► libkmp_draco_native.so（arm64-v8a）
+    ├─ iOS ──────► KmpDracoNative.xcframework
+    ├─ Ohos ─────► libkmp_draco_native.so（arm64-v8a）
+    └─ H5 ───────► kmp_draco_native.js + _bg.wasm
 ```
 
 ---
@@ -45,59 +47,42 @@ kmp_draco_native（Rust + draco-core decoder）
 
 | 场景 | 状态 | 说明 |
 |---|---|---|
-| Triangle mesh bitstream → 分属性 `FloatArray` + indices | **已有（M0）** | `Draco.decode` |
+| Triangle mesh bitstream → 分属性 `FloatArray` + indices | **已有** | `Draco.decode` |
 | `KHR_draco` uniqueId 属性查找 | **已有** | `DecodedMesh.attributeByUniqueId` |
-| Android arm64 真机 / 仪器测试 | **已有** | Tokyo fixture + `connectedDebugAndroidTest` |
-| iOS / Ohos / Wasm native | **规划中** | M0 不承诺；缺库须 fail-loud |
-| Point cloud / encode / 交错 VBO | **非目标** | 见 ADR 0001 |
-| 解析 `.gltf` / `.glb` / 场景图 | **非目标** | 交给 `holm-gltf` 等上层 |
+| Android arm64 | **已有** | Tokyo fixture + instrumented test |
+| iOS arm64 device+sim | **已有（本地）** | xcframework + cinterop；App 须链框架 |
+| Ohos arm64 | **已有（本地）** | `.so` + `ohosInclude`；App 须放 libs |
+| H5 wasm | **已有（本地）** | `window.__kmpDraco`；宿主先 init wasm |
+| Pod / ohpm / npm 上架 | **未做** | ADR 0002 |
+| Point cloud / encode / 交错 VBO / 解析 glTF | **非目标** | ADR 0001 |
 
 ---
 
 ## 怎么用
 
 ```kotlin
-repositories {
-    mavenCentral() // Central 上架后
-    mavenLocal()   // 狗粮：先 ./publish-maven.sh local
-}
-
 dependencies {
     implementation("io.github.sofarnobug:kmp-draco:0.1.0")
 }
 ```
 
 ```kotlin
-import com.jlj.kmp.draco.Draco
-import com.jlj.kmp.draco.DracoDecodeException
-
-try {
-    val mesh = Draco.decode(dracoBytes)
-    val pos = mesh.positions          // FloatArray，必有
-    val nrm = mesh.normals            // 可能为空
-    val uv0 = mesh.attributeByUniqueId(texCoordUniqueId)?.values
-} catch (e: DracoDecodeException) {
-    // 空缓冲 / 非 mesh / 无 POSITION 等
-}
+val mesh = Draco.decode(dracoBytes)
+val pos = mesh.positions
 ```
 
-**Native 必带**：只加 Maven、不带 `jniLibs/**/libkmp_draco_native.so` → `UnsatisfiedLinkError`。  
-本仓 AAR 已打入 `arm64-v8a`；**x86 模拟器本波不支持**。
+**各端还须带 native**（详见 [guide](docs/guide.md)）：
+
+| 端 | 怎么带 |
+|---|---|
+| Android | AAR 已含 `jniLibs/arm64-v8a` |
+| iOS | 链 `kmp-draco-native/dist/ios/KmpDracoNative.xcframework` |
+| Ohos | 拷 `dist/ohos/arm64-v8a/libkmp_draco_native.so` 到 `entry/libs` |
+| H5 | 加载 `dist/wasm/*.js` + `_bg.wasm`，`await wasm_bindgen(...)` 后用 `__kmpDraco` |
 
 ### Holm / 旁路仓
 
-旁路仓 `../kmp-draco` **存在则默认** `includeBuild`；`kmp.draco.local=false` 才解析 Maven（可先 `publish-maven.sh local`）。键名对齐 `kmp.wgpu.local`。
-
----
-
-## 模块怎么选
-
-M0 **单 artifact**：
-
-| 路径 | 你得到什么 |
-|---|---|
-| **`:kmp-draco`**（Maven `kmp-draco`） | Kotlin API + 打入的 Android `.so` |
-| **`kmp-draco-native/`** | Rust crate（不单独发 Maven；随 AAR / 源码构建） |
+`../kmp-draco` 存在则默认 `includeBuild`；`kmp.draco.local=false` 走 Maven。Ohos 用 `ohosInclude/` composite。
 
 ---
 
@@ -108,10 +93,8 @@ M0 **单 artifact**：
 | [docs/guide.md](docs/guide.md) | 接入工程 |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | 维护本仓 |
 | [CHANGELOG.md](CHANGELOG.md) | 版本与渠道 |
-| [CONTEXT.md](CONTEXT.md) | 领域语言 / 边界 |
+| [CONTEXT.md](CONTEXT.md) | 领域语言 |
 | [docs/adr/](docs/adr/) | 决策记录 |
-| [kmp-draco/README.md](kmp-draco/README.md) | Kotlin 模块面 |
-| [kmp-draco-native/README.md](kmp-draco-native/README.md) | Rust 内核 |
 
 ## License
 

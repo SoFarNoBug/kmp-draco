@@ -3,5 +3,6 @@
 | 编号 | 标题 | 状态 | 日期 |
 |---|---|---|---|
 | [0001](0001-independent-rust-bitstream-android.md) | 独立 Rust 原语仓 · 只解比特流 · M0 仅 Android | Accepted | 2026-11-18 |
+| [0002](0002-ios-ohos-wasm-decode.md) | M1 · iOS / Ohos / Wasm decode | Accepted | 2026-11-19 |
 
 消费方（Holm）平行决策：[KuiklyHolm ADR 0017](../../../KuiklyHolm/docs/adr/0017-kmp-draco-under-holm-gltf.md)。

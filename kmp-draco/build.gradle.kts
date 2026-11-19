@@ -26,9 +26,38 @@ kotlin {
         publishLibraryVariants("release")
     }
 
+    js(IR) {
+        browser()
+    }
+
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach { target ->
+        target.compilations.getByName("main") {
+            cinterops {
+                create("kmp_draco_native") {
+                    defFile(project.file("src/nativeInterop/cinterop/kmp_draco_native.def"))
+                    includeDirs(project.file("../kmp-draco-native/include"))
+                }
+            }
+        }
+    }
+
     sourceSets {
         val commonMain by getting
         val androidMain by getting
+        val jsMain by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+        val nativeMain by creating {
+            dependsOn(commonMain)
+        }
+        val iosMain by creating {
+            dependsOn(nativeMain)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
+        }
         val androidInstrumentedTest by getting {
             dependencies {
                 implementation("androidx.test.ext:junit:1.2.1")

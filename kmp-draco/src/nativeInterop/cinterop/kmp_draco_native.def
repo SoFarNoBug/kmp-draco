@@ -1,0 +1,3 @@
+headers = kmp_draco_native.h
+headerFilter = kmp_draco_native.h
+package = kmp.draco.native.cinterop

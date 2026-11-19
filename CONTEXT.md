@@ -13,22 +13,27 @@ _Avoid_：holm-draco；glTF/GLB 解析器；Filament；通用网格 SDK
 _Avoid_：整个 `.gltf` / `.glb` 文件；JSON 场景图
 
 **DecodedMesh**：
-一次成功 decode 的结果：分属性数组 + 元数据（分量数、组件类型等）；非交错 VBO、非不透明 native handle。
+一次成功 decode 的结果：分属性数组 + 元数据；非交错 VBO、非不透明 native handle。
 _Avoid_：Interleaved buffer；GPU buffer；glTF Accessor
 
 **MeshDecoder 路径**：
-M0 只承诺 **triangle mesh**；point cloud 非本波语言。
-_Avoid_：把点云 / Gaussian 算进 M0 完成态
+只承诺 **triangle mesh**；point cloud 非本库语言。
+_Avoid_：把点云 / Gaussian 算进完成态
 
 **DracoDecodeException**：
-解码失败时的显式失败信号（空缓冲、非 mesh、不支持的流、无 POSITION 等）。
+解码失败时的显式失败信号。
 _Avoid_：返回 null / 空网格并只打 log
+
+**C ABI / wasm bridge**：
+iOS·Ohos 用手写 C ABI；H5 用 wasm-bindgen；Android 保留 JNI。
+_Avoid_：强制 Android 改走 C；把 Present/Session 塞进本库
 
 ## SoT
 
 | 主题 | 路径 |
 | --- | --- |
-| 身份与边界 | [`docs/adr/0001-independent-rust-bitstream-android.md`](docs/adr/0001-independent-rust-bitstream-android.md) |
+| 身份（M0） | [`docs/adr/0001-independent-rust-bitstream-android.md`](docs/adr/0001-independent-rust-bitstream-android.md) |
+| 三端 decode（M1） | [`docs/adr/0002-ios-ohos-wasm-decode.md`](docs/adr/0002-ios-ohos-wasm-decode.md) |
 | 路人 / 接入 | [`README.md`](README.md) · [`docs/guide.md`](docs/guide.md) |
 | 维护 / 发版 | [`CONTRIBUTING.md`](CONTRIBUTING.md) · [`CHANGELOG.md`](CHANGELOG.md) |
 | AI 路由 | [`AGENTS.md`](AGENTS.md) |
@@ -36,7 +41,6 @@ _Avoid_：返回 null / 空网格并只打 log
 
 ## 当前状态
 
-- 审讯已钉（2026-11-18）：独立仓、bitstream-only、`draco-core`、M0 仅 Android、分属性输出、同步 API、抛异常
-- M0 源码 + Android `.so` 已落地；Tokyo `testdata` Rust 单测 + androidInstrumentedTest 夹具；`publish-maven.sh local` 可用；Central 另单
-- Holm：旁路仓在则默认 includeBuild；`kmp.draco.local=false` 走 Maven（ADR 0017）；Tokyo Demo 真机已通
-- 文档：对齐 `kmp-wgpu` 的 README / guide / CONTRIBUTING / CHANGELOG + Holm 式 CONTEXT / ADR / AGENTS（2026-11-19）
+- M0 Android + M1 iOS/Ohos/Wasm decode 源码与本地 `dist/` 已落地（ADR 0002）；三渠上架未做
+- Tokyo fixture：`cargo test`（含 C ABI）绿；Wasm Node smoke points=104；Android 仪器 / Holm Demo 真机已通
+- Holm：`includeBuild` / `kmp.draco.local`；Ohos 用 `ohosInclude/`
