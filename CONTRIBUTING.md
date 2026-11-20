@@ -53,16 +53,17 @@ cd kmp-draco-native/dist/wasm
 
 ## 发布
 
-**渠道状态**见根 [CHANGELOG.md](CHANGELOG.md)。发版前先打 **同版本 git tag**（CocoaPods `s.source` 按 tag 拉仓）；xcframework / ohpm `src/main` / npm 产物须进 git。
+**0.2.0 渠道状态**见根 [CHANGELOG.md](CHANGELOG.md)。发版前先打 **同版本 git tag**（CocoaPods `s.source` 按 tag 拉仓）；xcframework / ohpm `src/main` / npm 产物须进 git。
 
 ### Maven Central
 
 ```bash
-./publish-maven.sh          # Central（需凭证）
+./publish-maven.sh          # Central（需 CENTRAL_USERNAME / CENTRAL_PASSWORD / GPG_KEY_PASSWORD）
 ./publish-maven.sh local    # mavenLocal 狗粮
 ```
 
-坐标：`io.github.sofarnobug:kmp-draco`。
+坐标：`io.github.sofarnobug:kmp-draco`。  
+**0.2.0 已发 Central**（repo1 可检索）。
 
 ### 鸿蒙 ohpm
 
@@ -71,7 +72,8 @@ cd kmp-draco-native/ohpm
 ./publish-ohos.sh
 ```
 
-口令经 hideable 读取时，**整段 `send "pass\r"` 会因控制字符 `\p{Cc}` 被拒**；脚本用 `_publish.expect` **逐字符**喂入口令。
+口令经 hideable 读取时，**整段 `send "pass\r"` 会因控制字符 `\p{Cc}` 被拒**；脚本用 `_publish.expect` **逐字符**喂入口令。  
+**0.2.0 已提交审核**（过审前 `ohpm info` 可能 404）。
 
 ### iOS CocoaPods
 
@@ -84,6 +86,8 @@ cd kmp-draco-native/ohpm
 pod trunk push KmpDracoNative.podspec --allow-warnings
 ```
 
+**0.2.0 已上 trunk**（`pod trunk info KmpDracoNative`）；CDN / `pod search` 可能滞后。trunk 偶发 internal error 后可能其实已入库；重推报 `duplicate entry` 即以 trunk API 为准。
+
 ### H5 npm
 
 ```bash
@@ -92,11 +96,13 @@ npm login
 npm publish --access public
 ```
 
-包名 `@sofarnobug/kmp-draco-native`（npm org=`sofarnobug`；ohpm 仍为 `@jlj/...`）。
+包名 `@sofarnobug/kmp-draco-native`（npm org=`sofarnobug`；ohpm 仍为 `@jlj/...`）。  
+**0.2.0 已发**（`npm view` → `latest: 0.2.0`）。
 
 ### GitHub Release（可选）
 
-tag 推送后可 `gh release create 0.2.0`；与 Maven / Pod 无硬依赖。
+tag 推送后可 `gh release create <ver>`；与 Maven / Pod 无硬依赖。  
+**[0.2.0 Release](https://github.com/SoFarNoBug/kmp-draco/releases/tag/0.2.0) 已建**。
 
 ## 边界
 

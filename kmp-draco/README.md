@@ -28,4 +28,5 @@
 | `ohosArm64Main`（`build.ohos.gradle.kts`） | 同上 |
 | `jsMain` | `window.__kmpDraco` |
 
-Native 产物与改 Rust 后的脚本 → [`../kmp-draco-native`](../kmp-draco-native/)。API 全表与避坑 → [docs/guide.md](../docs/guide.md)。
+Native 产物与改 Rust 后的脚本 → [`../kmp-draco-native`](../kmp-draco-native/)。API 全表与避坑 → [docs/guide.md](../docs/guide.md)。  
+渠道状态（Central / Pod / ohpm / npm）→ 根 [CHANGELOG.md](../CHANGELOG.md)。

@@ -22,6 +22,10 @@ ADR 0001 锁定 M0 仅 Android JNI。Android 链路（含 Holm `KHR_draco`）已
 - Holm `DracoBitstream` 非 Android actual 仍可 fail-loud，直到消费方接线（非本 ADR 范围）。
 - 缺 OH SDK / Xcode 时脚本失败不挡其它端合入。
 
+## Aftermath（0.2.0 · 2026-11-20）
+
+M1 当时「本波不上架」已由 **0.2.0** 补齐远端：Maven Central `kmp-draco:0.2.0`、CocoaPods `KmpDracoNative`、npm `@sofarnobug/kmp-draco-native`；ohpm `@jlj/kmp-draco-native` 已提交审核。渠道 SoT → 根 [CHANGELOG.md](../../CHANGELOG.md)。
+
 ## Relates
 
 - [ADR 0001](0001-independent-rust-bitstream-android.md)

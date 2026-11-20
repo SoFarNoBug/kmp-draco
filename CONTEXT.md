@@ -41,6 +41,7 @@ _Avoid_：强制 Android 改走 C；把 Present/Session 塞进本库
 
 ## 当前状态
 
-- M0 Android + M1 iOS/Ohos/Wasm decode 源码与本地 `dist/` 已落地（ADR 0002）；三渠上架未做
-- Tokyo fixture：`cargo test`（含 C ABI）绿；Wasm Node smoke points=104；Android 仪器 / Holm Demo 真机已通
-- Holm：`includeBuild` / `kmp.draco.local`；Ohos 用 `ohosInclude/`
+- **0.2.0**（2026-11-20）：M0+M1 能力 + `commonTest` + 远端分发
+- Maven Central：`io.github.sofarnobug:kmp-draco:0.2.0` **已发**；CocoaPods `KmpDracoNative` `0.2.0` **trunk 已收**；npm `@sofarnobug/kmp-draco-native@0.2.0` **已发**；ohpm `@jlj/kmp-draco-native@0.2.0` **审核中**
+- Tokyo fixture：`cargo test`（含 C ABI）绿；`testDebugUnitTest` / Wasm smoke / 四端真机狗粮已通
+- 渠道 SoT → [CHANGELOG.md](CHANGELOG.md)；发版步骤 → [CONTRIBUTING.md](CONTRIBUTING.md)

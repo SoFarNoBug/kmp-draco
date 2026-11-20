@@ -28,15 +28,15 @@ cargo test   # tokyo + C ABI roundtrip
 
 夹具：[`testdata/tokyo_prim0.drc`](testdata/tokyo_prim0.drc)。
 
-## 远端包
+## 远端包（0.2.0）
 
-| 渠 | 坐标 |
-|---|---|
-| CocoaPods | 仓根 `KmpDracoNative.podspec` → `KmpDracoNative` |
-| ohpm | [`ohpm/`](ohpm/) → `@jlj/kmp-draco-native` |
-| npm | [`npm/`](npm/) → `@sofarnobug/kmp-draco-native` |
+| 渠 | 坐标 | 状态 |
+|---|---|---|
+| CocoaPods | 仓根 `KmpDracoNative.podspec` → `KmpDracoNative` `0.2.0` | trunk 已收 |
+| ohpm | [`ohpm/`](ohpm/) → `@jlj/kmp-draco-native@0.2.0` | 审核中 |
+| npm | [`npm/`](npm/) → `@sofarnobug/kmp-draco-native@0.2.0` | 已发 |
 
-发版步骤见仓根 [CONTRIBUTING.md](../CONTRIBUTING.md)。
+发版步骤见仓根 [CONTRIBUTING.md](../CONTRIBUTING.md)；总表见 [CHANGELOG.md](../CHANGELOG.md)。
 
 ## 非目标
 

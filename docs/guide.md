@@ -12,13 +12,15 @@
 
 | 端 | Kotlin | Native | 接完标准 |
 |---|---|---|---|
-| **Android** | `kmp-draco` | AAR 内 `jniLibs/arm64-v8a/*.so`（~621 KiB） | `Draco.decode` OK |
-| **iOS** | 同上（iosArm64 / iosSimulatorArm64） | CocoaPods `KmpDracoNative` **0.2.0** | 链上后 decode OK；开 **xcworkspace** |
-| **Ohos** | `ohosInclude` composite → ohosArm64 | ohpm `@jlj/kmp-draco-native@0.2.0` | load 后 decode OK |
-| **H5** | js IR | npm `@sofarnobug/kmp-draco-native@0.2.0` | `__kmpDraco.decode` OK |
+| **Android** | `kmp-draco`（Central **0.2.0**） | AAR 内 `jniLibs/arm64-v8a/*.so`（~621 KiB） | `Draco.decode` OK |
+| **iOS** | 同上（iosArm64 / iosSimulatorArm64） | CocoaPods `KmpDracoNative` **0.2.0**（trunk 已收） | 链上后 decode OK；开 **xcworkspace** |
+| **Ohos** | `ohosInclude` composite → ohosArm64 | ohpm `@jlj/kmp-draco-native@0.2.0`（**审核中**；未过审可先用仓内 `dist/ohos`） | load 后 decode OK |
+| **H5** | js IR | npm `@sofarnobug/kmp-draco-native@0.2.0`（**已发**） | `__kmpDraco.decode` OK |
+
+渠道总表 → 根 [CHANGELOG.md](../CHANGELOG.md)。
 
 ```kotlin
-repositories { mavenCentral(); mavenLocal() }
+repositories { mavenCentral() }
 dependencies {
     implementation("io.github.sofarnobug:kmp-draco:0.2.0")
 }
@@ -38,7 +40,7 @@ pod 'KmpDracoNative', '0.2.0'
 ohpm install @jlj/kmp-draco-native@0.2.0
 ```
 
-产物在包内 `src/main/`（`.so` + 头文件）。
+产物在包内 `src/main/`（`.so` + 头文件）。**0.2.0 审核中**：公开源未过审前可先拷仓内 [`dist/ohos/arm64-v8a`](../kmp-draco-native/dist/ohos/arm64-v8a/)。
 
 ### H5
 

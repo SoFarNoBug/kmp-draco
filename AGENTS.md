@@ -4,8 +4,10 @@
 
 - 产品：**kmp-draco**（Draco **bitstream** 解码；Kotlin + Rust `draco-core`）
 - 身份：**ADR 0001**（M0 Android）· **ADR 0002**（M1 iOS/Ohos/Wasm）
-- Maven：`io.github.sofarnobug:kmp-draco`；包 `com.jlj.kmp.draco`
+- Maven：`io.github.sofarnobug:kmp-draco:0.2.0`（Central 已发）；包 `com.jlj.kmp.draco`
+- Native：CocoaPods `KmpDracoNative` · ohpm `@jlj/kmp-draco-native` · npm `@sofarnobug/kmp-draco-native`
 - 桥：Android JNI · iOS/Ohos C ABI · H5 wasm-bindgen
+- 渠道 SoT：[CHANGELOG.md](CHANGELOG.md)；发版：[CONTRIBUTING.md](CONTRIBUTING.md)
 - 消费方：Holm ADR 0017（`holm-gltf` 硬依赖）
 
 ## 接手阅读顺序
@@ -29,6 +31,7 @@
 | 路径 | 用途 |
 |---|---|
 | `kmp-draco/` | Kotlin + jniLibs + cinterop |
-| `kmp-draco-native/` | Rust + build-*.sh + dist/ |
+| `kmp-draco-native/` | Rust + build-*.sh + dist/ + ohpm/ + npm/ |
+| `KmpDracoNative.podspec` | CocoaPods |
 | `ohosInclude/` | Ohos composite |
 | `docs/` | guide + adr |
