@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- [FIX] jsMain `toUint8Array`：勿把 `Uint8Array` 当函数调用（`(intermediate value) is not a function`）；按无符号字节写入后再 `__kmpDraco.decode`
+
 ### 0.1.1 — 2026-11-19（M1 三端 decode）
 
 - [ADD] iOS：`build-ios.sh` → `KmpDracoNative.xcframework`（device+sim arm64）+ `iosMain` cinterop

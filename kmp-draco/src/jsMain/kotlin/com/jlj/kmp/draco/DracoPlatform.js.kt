@@ -1,5 +1,7 @@
 package com.jlj.kmp.draco
 
+import org.khronos.webgl.Uint8Array
+
 /**
  * @CreateDate: 2026/11/19
  * @Author: jlj
@@ -27,17 +29,19 @@ private fun isWasmReady(): Boolean =
         "typeof window !== 'undefined' && !!window.__kmpDraco && typeof window.__kmpDraco.decode === 'function'",
     ) as Boolean
 
-private fun toUint8Array(bytes: ByteArray): dynamic {
-    val u8 = js("new Uint8Array(arguments[0])").unsafeCast<(Int) -> dynamic>()(bytes.size)
+private fun toUint8Array(bytes: ByteArray): Uint8Array {
+    val u8 = Uint8Array(bytes.size)
+    val dyn = u8.asDynamic()
     for (i in bytes.indices) {
-        u8[i] = bytes[i]
+        // Byte 有符号；wasm 要 0..255
+        dyn[i] = bytes[i].toInt() and 0xFF
     }
     return u8
 }
 
-private fun decodeJs(u8: dynamic): dynamic {
-    val fn = js("window.__kmpDraco.decode")
-    return fn(u8)
+private fun decodeJs(u8: Uint8Array): dynamic {
+    val decode = js("window.__kmpDraco.decode").unsafeCast<(Uint8Array) -> dynamic>()
+    return decode(u8)
 }
 
 private fun mapMesh(raw: dynamic): DecodedMesh {
