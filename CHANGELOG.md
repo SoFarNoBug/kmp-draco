@@ -15,7 +15,7 @@
 | 渠道 | 坐标 / 包 | 状态 |
 |---|---|---|
 | mavenLocal | `io.github.sofarnobug:kmp-draco:0.2.0` | **可用**（`./publish-maven.sh local`） |
-| Maven Central | 同上 | **未发**（本机缺 Central / GPG 口令环境变量） |
+| Maven Central | 同上 | **已发**（2026-11-20） |
 | CocoaPods | `KmpDracoNative` `0.2.0` | **trunk 已收**（CDN / `pod search` 可能滞后） |
 | ohpm | `@jlj/kmp-draco-native@0.2.0` | **已提交审核**（公开源 404 属正常，待过审） |
 | npm | `@sofarnobug/kmp-draco-native@0.2.0` | **已发** |
