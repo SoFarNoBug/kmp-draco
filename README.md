@@ -12,8 +12,8 @@ Kotlin Multiplatform 的 **Draco bitstream** 解码原语：业务侧同一套 K
 
 | | |
 |---|---|
-| Maven | `io.github.sofarnobug:kmp-draco:0.2.0` |
-| Native | Android `.so`（AAR）· CocoaPods `KmpDracoNative` `0.2.0` · ohpm `@jlj/kmp-draco-native@0.2.0` · npm `@sofarnobug/kmp-draco-native@0.2.0` |
+| Maven | `io.github.sofarnobug:kmp-draco:0.2.0`（**mavenLocal**；Central 另发） |
+| Native | Android `.so`（AAR）· CocoaPods `KmpDracoNative` `0.2.0`（**trunk 已收**）· ohpm `@jlj/kmp-draco-native@0.2.0`（**审核中**）· npm `@sofarnobug/kmp-draco-native@0.2.0`（**已发**） |
 | 语言 | Kotlin Multiplatform 脸 + Rust / `draco-core` |
 | License | Apache-2.0（对齐 `draco-core`） |
 
