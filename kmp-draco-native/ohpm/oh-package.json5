@@ -1,0 +1,17 @@
+{
+  "name": "@jlj/kmp-draco-native",
+  "version": "0.2.0",
+  "description": "HarmonyOS 原生 Draco bitstream 解码库（.so）",
+  "main": "index.ets",
+  "author": {
+    "name": "jlj",
+    "email": "1396275290@qq.com"
+  },
+  "license": "Apache-2.0",
+  "compatibleSdkVersion": "5.0.0(12)",
+  "compatibleSdkType": "OpenHarmony",
+  "repository": "https://github.com/SoFarNoBug/kmp-draco",
+  "homepage": "https://github.com/SoFarNoBug/kmp-draco#readme",
+  "keywords": ["kmp-draco", "draco", "harmonyos", "ohos", "native"],
+  "dependencies": {}
+}

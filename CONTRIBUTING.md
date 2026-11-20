@@ -9,6 +9,9 @@
 |---|---|
 | `kmp-draco/` | KMP 脸：Android / iOS / js actual + cinterop；Ohos 见 `build.ohos.gradle.kts` |
 | `kmp-draco-native/` | Rust + `include/` + `build-*.sh` + `dist/` + testdata |
+| `kmp-draco-native/ohpm/` | 鸿蒙 ohpm 包 `@jlj/kmp-draco-native` |
+| `kmp-draco-native/npm/` | H5 npm 包 `@sofarnobug/kmp-draco-native` |
+| `KmpDracoNative.podspec` | CocoaPods（仓根） |
 | `ohosInclude/` | Ohos KBA `includeBuild` 入口 |
 | `docs/` | guide + adr |
 
@@ -22,8 +25,8 @@
 cd kmp-draco-native
 ./build-android.sh   # → kmp-draco/.../jniLibs/arm64-v8a/
 ./build-ios.sh       # → dist/ios/KmpDracoNative.xcframework
-./build-ohos.sh      # → dist/ohos/arm64-v8a/  （需 OHOS_SDK_NATIVE）
-./build-wasm.sh      # → dist/wasm/  （需 wasm-bindgen-cli 与 Cargo.lock 同版）
+./build-ohos.sh      # → dist/ohos/ + ohpm/src/main/  （需 OHOS_SDK_NATIVE）
+./build-wasm.sh      # → dist/wasm/ + npm/  （需 wasm-bindgen-cli 与 Cargo.lock 同版）
 ```
 
 工具链：
@@ -50,13 +53,50 @@ cd kmp-draco-native/dist/wasm
 
 ## 发布
 
-渠道状态见 [CHANGELOG.md](CHANGELOG.md)。
+**渠道状态**见根 [CHANGELOG.md](CHANGELOG.md)。发版前先打 **同版本 git tag**（CocoaPods `s.source` 按 tag 拉仓）；xcframework / ohpm `src/main` / npm 产物须进 git。
+
+### Maven Central
 
 ```bash
-./publish-maven.sh local
+./publish-maven.sh          # Central（需凭证）
+./publish-maven.sh local    # mavenLocal 狗粮
 ```
 
-**本波不上架** CocoaPods / ohpm / npm。Central 另单。
+坐标：`io.github.sofarnobug:kmp-draco`。
+
+### 鸿蒙 ohpm
+
+```bash
+cd kmp-draco-native/ohpm
+./publish-ohos.sh
+```
+
+口令经 hideable 读取时，**整段 `send "pass\r"` 会因控制字符 `\p{Cc}` 被拒**；脚本用 `_publish.expect` **逐字符**喂入口令。
+
+### iOS CocoaPods
+
+- podspec：**仓根** `KmpDracoNative.podspec`
+- xcframework：`build-ios.sh` → 入库 `kmp-draco-native/dist/ios/`
+- iOS 部署下限 **15.0**；模拟器仅 arm64（排除 `x86_64`）
+- 发布：
+
+```bash
+pod trunk push KmpDracoNative.podspec --allow-warnings
+```
+
+### H5 npm
+
+```bash
+cd kmp-draco-native/npm
+npm login
+npm publish --access public
+```
+
+包名 `@sofarnobug/kmp-draco-native`（npm org=`sofarnobug`；ohpm 仍为 `@jlj/...`）。
+
+### GitHub Release（可选）
+
+tag 推送后可 `gh release create 0.2.0`；与 Maven / Pod 无硬依赖。
 
 ## 边界
 

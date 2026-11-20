@@ -28,7 +28,17 @@ cargo test   # tokyo + C ABI roundtrip
 
 夹具：[`testdata/tokyo_prim0.drc`](testdata/tokyo_prim0.drc)。
 
+## 远端包
+
+| 渠 | 坐标 |
+|---|---|
+| CocoaPods | 仓根 `KmpDracoNative.podspec` → `KmpDracoNative` |
+| ohpm | [`ohpm/`](ohpm/) → `@jlj/kmp-draco-native` |
+| npm | [`npm/`](npm/) → `@sofarnobug/kmp-draco-native` |
+
+发版步骤见仓根 [CONTRIBUTING.md](../CONTRIBUTING.md)。
+
 ## 非目标
 
-- 上架 Pod/ohpm/npm（见 ADR 0002）
 - Google C++ 内核（ADR 0001）
+- 公开 encode / point cloud

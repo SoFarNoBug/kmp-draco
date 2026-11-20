@@ -13,22 +13,45 @@
 | 端 | Kotlin | Native | 接完标准 |
 |---|---|---|---|
 | **Android** | `kmp-draco` | AAR 内 `jniLibs/arm64-v8a/*.so`（~621 KiB） | `Draco.decode` OK |
-| **iOS** | 同上（iosArm64 / iosSimulatorArm64） | 链 [`dist/ios/KmpDracoNative.xcframework`](../kmp-draco-native/dist/ios/) | 链上后 decode OK |
-| **Ohos** | `ohosInclude` composite → ohosArm64 | [`dist/ohos/arm64-v8a/*.so`](../kmp-draco-native/dist/ohos/)（~564 KiB） | load 后 decode OK |
-| **H5** | js IR | [`dist/wasm`](../kmp-draco-native/dist/wasm/)（~208 KiB wasm） | `__kmpDraco.decode` OK |
+| **iOS** | 同上（iosArm64 / iosSimulatorArm64） | CocoaPods `KmpDracoNative` **0.2.0** | 链上后 decode OK；开 **xcworkspace** |
+| **Ohos** | `ohosInclude` composite → ohosArm64 | ohpm `@jlj/kmp-draco-native@0.2.0` | load 后 decode OK |
+| **H5** | js IR | npm `@sofarnobug/kmp-draco-native@0.2.0` | `__kmpDraco.decode` OK |
 
 ```kotlin
-repositories { mavenLocal(); mavenCentral() }
+repositories { mavenCentral(); mavenLocal() }
 dependencies {
-    implementation("io.github.sofarnobug:kmp-draco:0.1.0")
+    implementation("io.github.sofarnobug:kmp-draco:0.2.0")
 }
 ```
+
+### iOS
+
+```ruby
+pod 'KmpDracoNative', '0.2.0'
+```
+
+必须用 `*.xcworkspace`。Kotlin framework 需能链到 vendored xcframework。
+
+### 鸿蒙
+
+```bash
+ohpm install @jlj/kmp-draco-native@0.2.0
+```
+
+产物在包内 `src/main/`（`.so` + 头文件）。
+
+### H5
+
+```bash
+npm i @sofarnobug/kmp-draco-native@0.2.0
+```
+
+将 `kmp_draco_native.js` + `_bg.wasm` + `kmp_draco_glue.js` 放到可加载路径（见下方加载顺序）。
 
 ### 旁路本仓（可选）
 
 - Gradle `includeBuild("../kmp-draco")`（路径按你的布局）
 - Ohos：`includeBuild("…/kmp-draco/ohosInclude")`（KBA）
-- 也可继续走 mavenLocal / 日后 Central
 
 ### 包体积（native）
 

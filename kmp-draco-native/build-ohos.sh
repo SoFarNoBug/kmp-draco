@@ -87,6 +87,13 @@ rm -rf "$DIST"
 mkdir -p "$DIST/arm64-v8a"
 cp "$SO" "$DIST/arm64-v8a/$LIB_NAME"
 cp "$HEADER" "$DIST/kmp_draco_native.h"
-echo "OK → $DIST/arm64-v8a/$LIB_NAME"
+
+# Sync ohpm package payload (publish-ohos.sh packs src/main)
+OHPM_MAIN="$ROOT/ohpm/src/main"
+mkdir -p "$OHPM_MAIN"
+cp "$SO" "$OHPM_MAIN/$LIB_NAME"
+cp "$HEADER" "$OHPM_MAIN/kmp_draco_native.h"
+
+echo "OK → $DIST/arm64-v8a/$LIB_NAME (+ ohpm/src/main)"
 ls -la "$DIST/arm64-v8a/$LIB_NAME"
 du -sh "$DIST/arm64-v8a/$LIB_NAME"

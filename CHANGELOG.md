@@ -2,10 +2,25 @@
 
 ## Unreleased
 
+## 0.2.0 — 2026-11-20
+
 - [ADD] Kotlin `commonTest`：`DecodedMesh` 查询 API（`attributeByUniqueId` / `named` / positions·可选属性访问器）；`./gradlew :kmp-draco:testDebugUnitTest`
 - [FIX] jsMain `toUint8Array`：勿把 `Uint8Array` 当函数调用（`(intermediate value) is not a function`）；按无符号字节写入后再 `__kmpDraco.decode`
+- [DOC] 路人 / 接入 / 维护三份文档分工；去掉跨产品旁路表述，按独立库书写
+- [ADD] 远端分发包装：仓根 `KmpDracoNative.podspec` · ohpm `@jlj/kmp-draco-native` · npm `@sofarnobug/kmp-draco-native`
+- Maven 坐标升至 `0.2.0`（含此前 changelog 已记、未单独抬版本号的 M1 能力）
 
-### 0.1.1 — 2026-11-19（M1 三端 decode）
+### 分发渠道
+
+| 渠道 | 坐标 / 包 | 状态 |
+|---|---|---|
+| mavenLocal | `io.github.sofarnobug:kmp-draco:0.2.0` | 可用（`./publish-maven.sh local`） |
+| Maven Central | 同上 | 发版中 / 见本波 push 结果 |
+| CocoaPods | `KmpDracoNative` `0.2.0` | 发版中 / 见本波 trunk 结果 |
+| ohpm | `@jlj/kmp-draco-native@0.2.0` | 发版中 / 见本波 ohpm 结果 |
+| npm | `@sofarnobug/kmp-draco-native@0.2.0` | 发版中 / 见本波 npm 结果 |
+
+## 0.1.1 — 2026-11-19（M1 三端 decode；changelog 记事，Maven 未单独发此号）
 
 - [ADD] iOS：`build-ios.sh` → `KmpDracoNative.xcframework`（device+sim arm64）+ `iosMain` cinterop
 - [ADD] Ohos：`build-ohos.sh` → `dist/ohos/arm64-v8a/libkmp_draco_native.so` + `ohosInclude` / `ohosArm64Main`

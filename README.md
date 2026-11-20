@@ -12,8 +12,8 @@ Kotlin Multiplatform 的 **Draco bitstream** 解码原语：业务侧同一套 K
 
 | | |
 |---|---|
-| Maven | `io.github.sofarnobug:kmp-draco:0.1.0`（**mavenLocal 可用**；Central 另单） |
-| Native | Android `.so` · iOS xcframework · Ohos `.so` · H5 wasm（**本地 dist/**；三渠上架另单） |
+| Maven | `io.github.sofarnobug:kmp-draco:0.2.0` |
+| Native | Android `.so`（AAR）· CocoaPods `KmpDracoNative` `0.2.0` · ohpm `@jlj/kmp-draco-native@0.2.0` · npm `@sofarnobug/kmp-draco-native@0.2.0` |
 | 语言 | Kotlin Multiplatform 脸 + Rust / `draco-core` |
 | License | Apache-2.0（对齐 `draco-core`） |
 
@@ -52,7 +52,7 @@ kmp_draco_native（Rust + draco-core decoder）
 | iOS arm64 device+sim | **已有（本地）** | xcframework + cinterop；App 须链框架 |
 | Ohos arm64 | **已有（本地）** | `.so` + `ohosInclude`；App 须放 libs |
 | H5 wasm | **已有（本地）** | `window.__kmpDraco`；宿主先 init wasm |
-| Pod / ohpm / npm 上架 | **未做** | ADR 0002 |
+| Pod / ohpm / npm 上架 | **0.2.0** | 见 CHANGELOG 渠道表 |
 | Point cloud / encode / 交错 VBO / 解析 glTF | **非目标** | ADR 0001 |
 
 ---
@@ -61,7 +61,7 @@ kmp_draco_native（Rust + draco-core decoder）
 
 ```kotlin
 dependencies {
-    implementation("io.github.sofarnobug:kmp-draco:0.1.0")
+    implementation("io.github.sofarnobug:kmp-draco:0.2.0")
 }
 ```
 
@@ -75,9 +75,9 @@ val pos = mesh.positions
 | 端 | 怎么带 |
 |---|---|
 | Android | AAR 已含 `jniLibs/arm64-v8a` |
-| iOS | 链 `kmp-draco-native/dist/ios/KmpDracoNative.xcframework` |
-| Ohos | 拷 `dist/ohos/arm64-v8a/libkmp_draco_native.so` 到 App `libs` |
-| H5 | 加载 `dist/wasm`，`await` init 后再 decode |
+| iOS | `pod 'KmpDracoNative', '0.2.0'`（请用 **xcworkspace**） |
+| Ohos | `ohpm install @jlj/kmp-draco-native@0.2.0` |
+| H5 | `npm i @sofarnobug/kmp-draco-native@0.2.0`（或拷贝 js + wasm + glue） |
 
 旁路开发：Gradle `includeBuild` 本仓；Ohos 用 [`ohosInclude/`](ohosInclude/)。
 

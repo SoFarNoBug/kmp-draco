@@ -9,3 +9,6 @@ local.properties
 .DS_Store
 **/.DS_Store
 # jniLibs .so：由 build-android.sh 产出；可入库便于 includeBuild（对齐 kmp-wgpu）
+# Native：Rust target 忽略；iOS xcframework / ohpm.so / npm.wasm 入库分发
+# ohpm packed artifacts
+**/*.har

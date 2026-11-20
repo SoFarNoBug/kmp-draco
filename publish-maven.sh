@@ -6,7 +6,7 @@
 set -euo pipefail
 
 TARGET="${1:-central}"
-VERSION="${MAVEN_VERSION:-0.1.0}"
+VERSION="${MAVEN_VERSION:-0.2.0}"
 GPG_KEY_ID="${GPG_KEY_ID:-E03218FD37956AC6AE94223E041C34E7F024F7A0}"
 
 if [ "$TARGET" = "local" ]; then

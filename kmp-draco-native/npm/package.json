@@ -1,0 +1,17 @@
+{
+  "name": "@sofarnobug/kmp-draco-native",
+  "version": "0.2.0",
+  "description": "Browser wasm glue for kmp-draco: Draco bitstream decode",
+  "main": "kmp_draco_native.js",
+  "files": [
+    "kmp_draco_native.js",
+    "kmp_draco_native_bg.wasm",
+    "kmp_draco_glue.js"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SoFarNoBug/kmp-draco.git"
+  },
+  "homepage": "https://github.com/SoFarNoBug/kmp-draco#readme"
+}

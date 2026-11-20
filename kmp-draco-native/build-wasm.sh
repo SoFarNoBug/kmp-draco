@@ -73,6 +73,11 @@ cat > "$DIST/kmp_draco_glue.js" <<'EOF'
 })(typeof self !== "undefined" ? self : this);
 EOF
 
-echo "OK → $DIST"
+# Sync npm package payload
+NPM_DIR="$ROOT/npm"
+mkdir -p "$NPM_DIR"
+cp "$DIST/kmp_draco_native.js" "$DIST/kmp_draco_native_bg.wasm" "$DIST/kmp_draco_glue.js" "$NPM_DIR/"
+
+echo "OK → $DIST (+ npm/)"
 ls -la "$DIST"
 du -sh "$DIST"/*
