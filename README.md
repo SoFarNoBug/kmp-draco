@@ -3,12 +3,12 @@
 **Draco 比特流进，分属性数组出。**
 
 Kotlin Multiplatform 的 **Draco bitstream** 解码原语：业务侧同一套 Kotlin API，底层是 Rust [`draco-core`](https://crates.io/crates/draco-core)（decoder-only）。  
-**不是** glTF / GLB 加载器，**不是** Holm 的一部分，**不**做 encode。
+**不是** glTF / GLB 加载器，**不**做 encode，**不**产出 GPU buffer。
 
 你可以用它：
 
 - 把 `KHR_draco_mesh_compression` 的 bufferView 字节（或裸 `.drc`）解成 POSITION / NORMAL / UV / COLOR + indices
-- 在自己的网格 / glTF 管线里按 `uniqueId` 对齐 extension 属性映射
+- 在自己的网格管线里按 `uniqueId` 对齐 extension 属性映射
 
 | | |
 |---|---|
@@ -17,18 +17,17 @@ Kotlin Multiplatform 的 **Draco bitstream** 解码原语：业务侧同一套 K
 | 语言 | Kotlin Multiplatform 脸 + Rust / `draco-core` |
 | License | Apache-2.0（对齐 `draco-core`） |
 
-> **路人读本页。** 完整接入 / API 全表 → [docs/guide.md](docs/guide.md)。构建 / 发版 → [CONTRIBUTING.md](CONTRIBUTING.md) · [CHANGELOG](CHANGELOG.md)。身份 SoT → [CONTEXT.md](CONTEXT.md) · [ADR 0001](docs/adr/0001-independent-rust-bitstream-android.md) · [ADR 0002](docs/adr/0002-ios-ohos-wasm-decode.md)。
+> **路人读本页。** 完整接入 / API 全表 → [docs/guide.md](docs/guide.md)。构建 / 发版 / 渠道 → [开发者文档](CONTRIBUTING.md) · [CHANGELOG](CHANGELOG.md)。
 
 ---
 
 ## 为什么是独立仓？
 
-Draco 是**压缩几何格式**，不是 GPU 原语。把它塞进 `kmp-wgpu` 或 Holm core 会污染边界。形态对齐 [`kmp-wgpu`](../kmp-wgpu)：独立仓 + Kotlin 脸 + Rust 内核。
-
-Holm 侧消费约定见 [KuiklyHolm ADR 0017](../KuiklyHolm/docs/adr/0017-kmp-draco-under-holm-gltf.md)。
+Draco 是**压缩几何格式**：输入是一段比特流，输出是 CPU 侧属性数组。把它和场景图解析、GPU Present 捆在同一库里会糊边界。  
+本仓只做一件事——**bitstream → 分属性缓冲**；形态是独立仓 + Kotlin 脸 + Rust 内核。
 
 ```text
-你的 KMP / App / holm-gltf
+你的 KMP / App
     │  Kotlin API（com.jlj.kmp.draco）
     ▼
 kmp-draco
@@ -58,7 +57,7 @@ kmp_draco_native（Rust + draco-core decoder）
 
 ---
 
-## 怎么用
+## 最小接入
 
 ```kotlin
 dependencies {
@@ -71,18 +70,29 @@ val mesh = Draco.decode(dracoBytes)
 val pos = mesh.positions
 ```
 
-**各端还须带 native**（详见 [guide](docs/guide.md)）：
+**各端还须带 native**（步骤与避坑 → [docs/guide.md](docs/guide.md)）：
 
 | 端 | 怎么带 |
 |---|---|
 | Android | AAR 已含 `jniLibs/arm64-v8a` |
 | iOS | 链 `kmp-draco-native/dist/ios/KmpDracoNative.xcframework` |
-| Ohos | 拷 `dist/ohos/arm64-v8a/libkmp_draco_native.so` 到 `entry/libs` |
-| H5 | 加载 `dist/wasm/*.js` + `_bg.wasm`，`await wasm_bindgen(...)` 后用 `__kmpDraco` |
+| Ohos | 拷 `dist/ohos/arm64-v8a/libkmp_draco_native.so` 到 App `libs` |
+| H5 | 加载 `dist/wasm`，`await` init 后再 decode |
 
-### Holm / 旁路仓
+旁路开发：Gradle `includeBuild` 本仓；Ohos 用 [`ohosInclude/`](ohosInclude/)。
 
-`../kmp-draco` 存在则默认 `includeBuild`；`kmp.draco.local=false` 走 Maven。Ohos 用 `ohosInclude/` composite。
+---
+
+## 常见问题（路人）
+
+**Q. 能直接丢整个 `.glb` 吗？**  
+A. 不能。先取出 Draco bufferView 字节，再 `Draco.decode`。
+
+**Q. 多套 UV 用哪个 API？**  
+A. `attributeByUniqueId`；不要依赖 `texCoords`（只取首个 `TEX_COORD`）。
+
+**Q. 详细接入、API 表、避坑去哪看？**  
+A. → [docs/guide.md](docs/guide.md)。编 Rust / 发版 → [开发者文档](CONTRIBUTING.md)。
 
 ---
 
@@ -95,6 +105,11 @@ val pos = mesh.positions
 | [CHANGELOG.md](CHANGELOG.md) | 版本与渠道 |
 | [CONTEXT.md](CONTEXT.md) | 领域语言 |
 | [docs/adr/](docs/adr/) | 决策记录 |
+| [`kmp-draco/`](kmp-draco/) | Kotlin 模块说明 |
+| [`kmp-draco-native/`](kmp-draco-native/) | Rust 内核说明 |
+
+接入细节与避坑 → **[docs/guide.md](docs/guide.md)**  
+构建 / 发版 / 渠道 → **[开发者文档](CONTRIBUTING.md)** · **[CHANGELOG](CHANGELOG.md)**
 
 ## License
 

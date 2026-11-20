@@ -12,9 +12,11 @@
 | `ohosInclude/` | Ohos KBA `includeBuild` 入口 |
 | `docs/` | guide + adr |
 
+本仓只做 Draco **bitstream → 分属性数组**。不要把 glTF 解析、GPU Present / Session 塞回本仓。
+
 ## 本地构建 Native
 
-改 Rust 后 **必须**重跑对应脚本：
+改 Rust 后 **必须**重跑对应脚本（Gradle / Xcode **不会**自动编 Rust）：
 
 ```bash
 cd kmp-draco-native
@@ -37,6 +39,7 @@ cd kmp-draco-native
 
 ```bash
 cd kmp-draco-native && cargo test          # decode + C ABI tokyo
+./gradlew :kmp-draco:testDebugUnitTest    # commonTest（DecodedMesh 纯 Kotlin）
 ./gradlew :kmp-draco:compileKotlinIosArm64 :kmp-draco:compileKotlinJs
 ./gradlew :kmp-draco:connectedDebugAndroidTest   # 需 arm64 设备
 
@@ -63,6 +66,7 @@ cd kmp-draco-native/dist/wasm
 | 改进错误 / 体积 | 静默空网格 |
 | 上架三渠（新 changelog） | 无 ADR 换 C++ 内核 |
 
-## 与 Holm 联调
+## 下游旁路
 
-Android：`includeBuild` 旁路仓。Ohos：`includeBuild(.../ohosInclude)`。见 Holm ADR 0017。
+- 任意工程：`includeBuild` 本仓根（或已 `publishToMavenLocal`）
+- Ohos：`includeBuild(…/ohosInclude)`（KBA 工具链）

@@ -9,7 +9,7 @@ Crate：`kmp_draco_native`（`cdylib` + `rlib` + `staticlib`）
 - Android：`android_jni.rs`
 - iOS / Ohos：`c_api.rs` + [`include/kmp_draco_native.h`](include/kmp_draco_native.h)
 - H5：`wasm_exports.rs`（wasm-bindgen）
-- **不**懂 glTF；**不**绑 Holm
+- **不**懂 glTF；**不**产出 GPU 资源
 
 ## 构建
 

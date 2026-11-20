@@ -46,6 +46,11 @@ kotlin {
 
     sourceSets {
         val commonMain by getting
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
         val androidMain by getting
         val jsMain by getting
         val iosArm64Main by getting
